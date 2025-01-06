@@ -1,0 +1,36 @@
+name: medcall_pro
+description: "A new Flutter project."
+
+
+publish_to: 'none' 
+
+
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.6.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  flutter_launcher_icons: ^0.14.2
+  flutter_native_splash: ^2.4.4
+  cupertino_icons: ^1.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^5.0.0
+
+flutter_launcher_icons:
+  ios: true
+  image_path: "assets/branding_12.png"
+
+flutter:
+  assets:
+    - assets/
+
+  uses-material-design: true
