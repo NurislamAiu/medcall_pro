@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:medcall_pro/routes/routes.dart';
 
-import 'home.dart';
 
 void main() {
   runApp(const MyApp());
@@ -9,11 +10,12 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Home()
+    return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
+      initialRoute: AppRoutes.navBar,
+      routes: AppRoutes.getRoutes(),
     );
   }
 }
