@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:medcall_pro/utils/size_screen.dart';
-import 'package:medcall_pro/widgets/custom_banner.dart';
 
-import '../../utils/color_screen.dart';
+import '../../widgets/custom_banner.dart';
 
 class StatisticsScreen extends StatelessWidget {
   const StatisticsScreen({Key? key}) : super(key: key);
@@ -10,44 +8,29 @@ class StatisticsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFF4F5FA),
       body: Column(
-        children: [
-          CustomBannerOur(
-            title: 'Статистика заявок',
-            subTitle: 'Получайте информацию о статусе заявок в реальном времени',
-            isButton: false,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                // Блок "Рейтинг"
-                GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      gradient: const LinearGradient(
-                        colors: [ScreenColor.background, Colors.white70],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                    ),
-                    padding: EdgeInsets.all(10),
-                    child: ListTile(
-                      title: const Text(
-                        'Рейтинг',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 14),
-                      ),
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CustomBannerOur(
+              title: 'Статистика заявок',
+              subTitle: 'Получайте информацию о статусе заявок в реальном времени',
+              isButton: false,
+            ),
+            const SizedBox(height: 20),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5),
+                child: Column(
+                  children: [
+                    _buildNeumorphicCard(
+                      title: 'Рейтинг',
                       subtitle: Row(
                         children: [
                           const Text(
                             '4.5 ',
                             style: TextStyle(fontSize: 18),
                           ),
-                          // Условный пример отображения звёзд
                           Icon(Icons.star, color: Colors.orange[700]),
                           Icon(Icons.star, color: Colors.orange[700]),
                           Icon(Icons.star, color: Colors.orange[700]),
@@ -55,81 +38,94 @@ class StatisticsScreen extends StatelessWidget {
                           const Icon(Icons.star_half, color: Colors.orange),
                         ],
                       ),
-                      trailing: Icon(
-                        Icons.arrow_forward_ios_outlined,
-                        size: 14,
-                      ),
+                      icon: Icons.arrow_forward_ios_outlined,
+                      onTap: () {},
                     ),
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-
-                // Блок "Доходы на сегодня"
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    gradient: const LinearGradient(
-                      colors: [ScreenColor.background, Colors.white70],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                  ),
-                  padding: EdgeInsets.all(10),
-                  child: ListTile(
-                    title: const Text(
-                      'Доходы на сегодня',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                    ),
-                    subtitle: Text(
-                      '14 320 ТГ', // подставьте актуальное значение
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.green,
-                      ),
-                    ),
-                    trailing: Icon(
-                      Icons.arrow_forward_ios_outlined,
-                      size: 14,
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-
-                // Блок "Достижения"
-                GestureDetector(
-                  onTap: () => Navigator.pushNamed(context, '/bonus'),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        gradient: const LinearGradient(
-                          colors: [ScreenColor.background, Colors.white70],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
+                    const SizedBox(height: 16),
+                    _buildNeumorphicCard(
+                      title: 'Доходы на сегодня',
+                      subtitle: const Text(
+                        '14 320 ТГ',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green,
                         ),
-                      ),padding: EdgeInsets.all(10),
-                      child: ListTile(
-                        title: Text(
-                          'Достижения',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                        trailing: Icon(Icons.arrow_forward_ios_outlined, size: 14,),
                       ),
+                      icon: Icons.arrow_forward_ios_outlined,
+                      onTap: () {},
                     ),
-                  ),
+                    const SizedBox(height: 16),
+                    _buildNeumorphicCard(
+                      title: 'Достижения',
+                      subtitle: const Text('Просмотрите свои достижения'),
+                      icon: Icons.arrow_forward_ios_outlined,
+                      onTap: () => Navigator.pushNamed(context, '/bonus'),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
+          ],
+        ),
+    );
+  }
+
+
+  Widget _buildNeumorphicCard({
+    required String title,
+    required Widget subtitle,
+    required IconData icon,
+    VoidCallback? onTap,
+  }) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.white,
+                offset: const Offset(-4, -4),
+                blurRadius: 10,
+              ),
+              BoxShadow(
+                color: Colors.grey.shade300,
+                offset: const Offset(4, 4),
+                blurRadius: 10,
+              ),
+            ],
           ),
-        ],
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    subtitle,
+                  ],
+                ),
+              ),
+              Icon(
+                icon,
+                color: Colors.grey[700],
+                size: 18,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

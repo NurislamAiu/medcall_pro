@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:medcall_pro/utils/size_screen.dart';
 import 'package:medcall_pro/widgets/custom_banner.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -92,8 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Center(
               child: Lottie.asset(
                 'assets/lottie/job.json',
-                width: 200,
-                height: 200,
+                height: ScreenSize(context).height * 0.3,
                 fit: BoxFit.cover,
               ),
             ),
