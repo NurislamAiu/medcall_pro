@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:medcall_pro/utils/validators.dart';
 import '../../../utils/color_screen.dart';
 import '../../../utils/size_screen.dart';
 import '../../../widgets/custom_button.dart';
@@ -14,14 +15,8 @@ class ForgotPasswordScreen extends StatefulWidget {
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  late final TextEditingController emailController;
-  bool _isLoading = false;
-
-  @override
-  void initState() {
-    super.initState();
-    emailController = TextEditingController();
-  }
+  final TextEditingController emailController = TextEditingController();
+  final RxBool isLoading = false.obs;
 
   @override
   void dispose() {
@@ -29,35 +24,28 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     super.dispose();
   }
 
-  String? _emailValidator(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Введите адрес электронной почты';
-    }
-    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
-    if (!emailRegex.hasMatch(value)) {
-      return 'Некорректный формат почты';
-    }
-    return null;
-  }
-
   void _sendResetLink() async {
-    if (!_formKey.currentState!.validate()) {
-      return;
+    if (!_formKey.currentState!.validate()) return;
+
+    isLoading.value = true;
+
+    try {
+      await FirebaseAuth.instance
+          .sendPasswordResetEmail(email: emailController.text);
+      Future.delayed(Duration(milliseconds: 100), () {
+        Get.snackbar(
+          'Успешно!',
+          'Ссылка для сброса пароля отправлена',
+          backgroundColor: Colors.green.withOpacity(0.7),
+        );
+      });
+      Get.back();
+    } catch (e) {
+      Validators.showError('Не удалось отправить ссылку: ${e.toString()}');
+
     }
 
-    setState(() {
-      _isLoading = true;
-    });
-
-    await Future.delayed(Duration(seconds: 2));
-
-    setState(() {
-      _isLoading = false;
-    });
-
-    Get.snackbar('Успешно!','Ссылка для сброса пароля отправлена на ${emailController.text}');
-
-    Navigator.pop(context);
+    isLoading.value = false;
   }
 
   @override
@@ -74,22 +62,16 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Сброс пароля',
-                        style: TextStyle(
-                            color: ScreenColor.color2,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 26),
-                      ),
-                      Text(
-                        'Введите адрес электронной почты, чтобы получить ссылку для сброса пароля.',
-                        style:
-                        TextStyle(color: ScreenColor.color2, fontSize: 16),
-                      ),
-                    ],
+                  Text(
+                    'Сброс пароля',
+                    style: TextStyle(
+                        color: ScreenColor.color2,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 26),
+                  ),
+                  Text(
+                    'Введите адрес электронной почты, чтобы получить ссылку для сброса пароля.',
+                    style: TextStyle(color: ScreenColor.color2, fontSize: 16),
                   ),
                   SizedBox(height: 20),
                   CustomTextField(
@@ -97,7 +79,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     type: TextInputType.emailAddress,
                     label: 'Почта',
                     icon: Iconsax.sms,
-                    validator: _emailValidator,
+                    validator: Validators.emailValidator,
                   ),
                   SizedBox(height: 20),
                   CustomButton(
@@ -109,22 +91,25 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               ),
             ),
           ),
-          if (_isLoading)
-            Positioned.fill(
-              child: Container(
-                color: Colors.black.withOpacity(0.4),
-                child: Center(
-                  child: CircularProgressIndicator(
-                    color: ScreenColor.color6,
-                  ),
-                ),
-              ),
-            ),
+          Obx(
+            () => isLoading.value
+                ? Positioned.fill(
+                    child: Container(
+                      color: Colors.black.withOpacity(0.4),
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: ScreenColor.color6,
+                        ),
+                      ),
+                    ),
+                  )
+                : SizedBox(),
+          ),
           Positioned(
             top: ScreenSize(context).height * 0.1,
             right: 10,
             child: IconButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => Get.back(),
               icon: Icon(Icons.close),
             ),
           ),

@@ -32,39 +32,48 @@ class Validators {
 
   static String? iinValidator(String? value) {
     if (value == null || value.isEmpty) return 'Введите ИИН';
+
     final sanitizedValue = value.replaceAll(RegExp(r'[^0-9]'), '');
     if (sanitizedValue.length != 12) return 'ИИН должен содержать 12 цифр';
+
     if (!_isValidDateParts(sanitizedValue)) return 'Некорректная дата в ИИН';
     if (!_isValidIINChecksum(sanitizedValue)) return 'Некорректный ИИН';
-    return null;
+
+    return null; // Если ошибок нет, возвращаем null (валидный ИИН)
   }
 
   static bool _isValidDateParts(String iin) {
-    final yearPart = int.parse(iin.substring(0, 2));
-    final monthPart = int.parse(iin.substring(2, 4));
-    final dayPart = int.parse(iin.substring(4, 6));
+    final int yearPart = int.parse(iin.substring(0, 2));
+    final int monthPart = int.parse(iin.substring(2, 4));
+    final int dayPart = int.parse(iin.substring(4, 6));
+
     if (yearPart < 0 || yearPart > 99) return false;
     if (monthPart < 1 || monthPart > 12) return false;
     if (dayPart < 1 || dayPart > 31) return false;
+
     return true;
   }
 
   static bool _isValidIINChecksum(String iin) {
-    const weights1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
-    const weights2 = [3, 4, 5, 6, 7, 8, 9, 10, 11, 1, 2];
-    final digits = iin.split('').map(int.parse).toList();
-    final checksum1 = digits
-        .asMap()
-        .entries
-        .fold<int>(0, (sum, entry) => sum + entry.value * weights1[entry.key]);
-    if (checksum1 % 11 != 10) {
-      return digits[11] == (checksum1 % 11);
+    const List<int> weights1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+    const List<int> weights2 = [3, 4, 5, 6, 7, 8, 9, 10, 11, 1, 2];
+
+    final List<int> digits = iin.split('').map(int.parse).toList();
+
+    // Проверяем, что у нас точно 12 цифр
+    if (digits.length != 12) return false;
+
+    // Вычисляем первую контрольную сумму
+    final int checksum1 = List.generate(11, (i) => digits[i] * weights1[i]).reduce((a, b) => a + b) % 11;
+
+    if (checksum1 != 10) {
+      return digits[11] == checksum1;
     }
-    final checksum2 = digits
-        .asMap()
-        .entries
-        .fold<int>(0, (sum, entry) => sum + entry.value * weights2[entry.key]);
-    return digits[11] == (checksum2 % 11);
+
+    // Вычисляем вторую контрольную сумму
+    final int checksum2 = List.generate(11, (i) => digits[i] * weights2[i]).reduce((a, b) => a + b) % 11;
+
+    return digits[11] == checksum2;
   }
 
   static String? phoneValidator(String? value) {

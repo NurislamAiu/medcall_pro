@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:medcall_pro/routes/routes.dart';
+import 'package:medcall_pro/screens/auth/forgot_password/new_password.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

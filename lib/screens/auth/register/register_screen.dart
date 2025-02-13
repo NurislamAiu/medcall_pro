@@ -17,7 +17,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
 
-  // Контроллеры для полей ввода
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
@@ -45,15 +44,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
       String certificateNumber = certificateController.text.trim();
       String gender = _gender;
       int age = int.parse(ageController.text.trim());
-      print('qwwe');
 
-      // Регистрируем пользователя в Firebase Auth
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
 
       String uid = userCredential.user!.uid;
 
-      // Сохраняем данные пользователя в Firestore
       await FirebaseFirestore.instance.collection('users').doc(uid).set({
         'fullName': fullName,
         'email': email,
@@ -66,7 +62,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
         'isApproved': false,
       });
 
-      // Переход на главную страницу
       Navigator.pushReplacementNamed(context, '/waiting');
     } catch (e) {
       print("Ошибка регистрации: $e");

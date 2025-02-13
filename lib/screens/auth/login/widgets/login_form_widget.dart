@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:medcall_pro/utils/validators.dart';
 import '../../../../utils/color_screen.dart';
 import '../../../../widgets/custom_text_filed.dart';
 
@@ -24,35 +25,18 @@ class _LoginFormState extends State<LoginForm> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CustomTextField(
-          controller: widget.emailController, // Используем переданный контроллер
+          controller: widget.emailController,
           label: 'Почта',
           icon: Iconsax.sms,
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Введите адрес электронной почты';
-            }
-            final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
-            if (!emailRegex.hasMatch(value)) {
-              return 'Некорректный формат почты';
-            }
-            return null;
-          },
+          validator: Validators.emailValidator
         ),
         const SizedBox(height: 20),
         CustomTextField(
-          controller: widget.passwordController, // Используем переданный контроллер
+          controller: widget.passwordController,
           label: 'Пароль',
           icon: Iconsax.lock,
           obscureText: true,
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Введите пароль';
-            }
-            if (value.length < 6) {
-              return 'Пароль должен быть не менее 6 символов';
-            }
-            return null;
-          },
+          validator: Validators.passwordValidator
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
