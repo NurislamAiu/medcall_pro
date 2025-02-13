@@ -3,6 +3,10 @@ import 'package:iconsax/iconsax.dart';
 import '../../../utils/color_screen.dart';
 
 class ProfileGeneralInfo extends StatelessWidget {
+  final Map<String, dynamic>? data;
+
+  const ProfileGeneralInfo({Key? key, required this.data}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -23,11 +27,23 @@ class ProfileGeneralInfo extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _buildInfoBlock(Iconsax.clock, "8 Years", "Experience"),
+          _buildInfoBlock(
+            Iconsax.clock,
+            "${data?['experience'] ?? 'N/A'} Years",
+            "Experience",
+          ),
           const Text('|', style: TextStyle(color: Colors.grey)),
-          _buildInfoBlock(Iconsax.people, "3.5k +", "Patients"),
+          _buildInfoBlock(
+            Iconsax.people,
+            "${data?['patients'] ?? 'N/A'}",
+            "Patients",
+          ),
           const Text('|', style: TextStyle(color: Colors.grey)),
-          _buildInfoBlock(Iconsax.star, "2.8k +", "Reviews"),
+          _buildInfoBlock(
+            Iconsax.star,
+            "${data?['reviews'] ?? 'N/A'}",
+            "Reviews",
+          ),
         ],
       ),
     );

@@ -84,7 +84,7 @@ class ProfileBanner extends StatelessWidget {
 
                 /// Имя пользователя
                 Text(
-                  data!['name'] ?? "Unknown User",
+                  data!['fullName'] ?? "Unknown User",
                   style: TextStyle(
                     color: ScreenColor.color1,
                     fontWeight: FontWeight.w600,

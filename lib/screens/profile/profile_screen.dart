@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:medcall_pro/screens/profile/wigdets/profile_banner_widget.dart';
@@ -14,35 +15,44 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   bool _isLoading = true;
   String _errorMessage = '';
-  Map<String, dynamic>? _cachedUserData;
+  Map<String, dynamic>? _userData;
 
   @override
   void initState() {
     super.initState();
-    _getLocalUserData();
+    _fetchUserData();
   }
 
-  Future<void> _getLocalUserData() async {
-    await Future.delayed(Duration(seconds: 2));
-    setState(() {
-      _cachedUserData = {
-        'photoUrl': 'https://i.pinimg.com/originals/eb/e6/f4/ebe6f490ccff1daa0a3dc7d9dbbb92d3.png',
-        'name': 'Ilyasov Nurislam',
-        'specialist': 'Medicine DR.',
-        'email': 'nurik@example.com',
-        'address': 'Astana, Kazakhstan',
-        'age': 20,
-        'rating': 4.5,
-        'gender': 'Male',
-        'phone': '+7 777 123 45 67',
-      };
-      _isLoading = false;
-    });
+  Future<void> _fetchUserData() async {
+    try {
+      String uid = FirebaseAuth.instance.currentUser?.uid ?? "";
+      if (uid.isEmpty) {
+        throw Exception("User not logged in");
+      }
+
+      DocumentSnapshot userDoc =
+      await FirebaseFirestore.instance.collection('users').doc(uid).get();
+
+      if (!userDoc.exists) {
+        throw Exception("User data not found");
+      }
+
+      setState(() {
+        _userData = userDoc.data() as Map<String, dynamic>;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Ошибка загрузки данных: $e';
+        _isLoading = false;
+      });
+    }
   }
+
   Future<void> _logout() async {
     try {
-      await FirebaseAuth.instance.signOut(); // Выход из Firebase
-      Navigator.pushReplacementNamed(context, '/login'); // Перенаправление на экран входа
+      await FirebaseAuth.instance.signOut();
+      Navigator.pushReplacementNamed(context, '/login');
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Ошибка выхода: $e')),
@@ -60,9 +70,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ? Center(child: Text(_errorMessage))
           : Column(
         children: [
-          ProfileBanner(data: _cachedUserData),
-          ProfileGeneralInfo(),
-          ProfileMoreInfo(data: _cachedUserData),
+          ProfileBanner(data: _userData),
+          ProfileGeneralInfo(data: _userData),
+          ProfileMoreInfo(data: _userData),
           ElevatedButton(onPressed: _logout, child: Text('Exit'))
         ],
       ),

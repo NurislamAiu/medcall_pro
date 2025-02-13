@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
-
 import '../../../utils/color_screen.dart';
 
 class ProfileMoreInfo extends StatelessWidget {
@@ -32,22 +31,22 @@ class ProfileMoreInfo extends StatelessWidget {
             buildInfoCard(
               icon: Iconsax.location,
               title: "Address",
-              value: data!['address'] ?? "Not Available",
+              value: data?['address'] ?? "Not Available",
             ),
             buildInfoCard(
               icon: Iconsax.calendar,
               title: "Age",
-              value: data!['age']?.toString() ?? "Not Available",
+              value: data?['age']?.toString() ?? "Not Available",
             ),
             buildInfoCard(
               icon: Iconsax.man,
               title: "Gender",
-              value: data!['gender']?.toString() ?? "Not Available",
+              value: data?['gender']?.toString() ?? "Not Available",
             ),
             buildInfoCard(
               icon: Iconsax.mobile,
               title: "Phone",
-              value: data!['phone']?.toString() ?? "Not Available",
+              value: data?['phone']?.toString() ?? "Not Available",
             ),
           ],
         ),
@@ -56,14 +55,15 @@ class ProfileMoreInfo extends StatelessWidget {
   }
 }
 
-
-Widget buildInfoCard(
-    {required IconData icon, required String title, required String value}) {
-  return Expanded(
-    child: ListTile(
-      leading: Icon(icon, color: ScreenColor.color1),
-      title: Text(title, style: TextStyle(fontWeight: FontWeight.bold, color: ScreenColor.color6)),
-      subtitle: Text(value, style: TextStyle(color: Colors.grey[700])),
-    ),
+Widget buildInfoCard({
+  required IconData icon,
+  required String title,
+  required String value,
+}) {
+  return ListTile(
+    leading: Icon(icon, color: ScreenColor.color1),
+    title: Text(title,
+        style: TextStyle(fontWeight: FontWeight.bold, color: ScreenColor.color6)),
+    subtitle: Text(value, style: TextStyle(color: Colors.grey[700])),
   );
 }
