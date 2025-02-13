@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:medcall_pro/screens/auth/login/widgets/login_bottom_widget.dart';
 import 'package:medcall_pro/screens/auth/login/widgets/login_form_widget.dart';
@@ -14,6 +15,16 @@ class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
 
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
   void _login() async {
     if (!_formKey.currentState!.validate()) {
       return;
@@ -23,13 +34,21 @@ class _LoginScreenState extends State<LoginScreen> {
       _isLoading = true;
     });
 
-    await Future.delayed(Duration(seconds: 2));
-
-    setState(() {
-      _isLoading = false;
-    });
-
-    Navigator.pushReplacementNamed(context, '/navBar');
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+      Navigator.pushReplacementNamed(context, '/navbar');
+    } on FirebaseAuthException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.message ?? "Ошибка входа")),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -50,11 +69,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     LoginHead(),
                     SizedBox(height: 30),
-                    LoginForm(),
+                    LoginForm(
+                      emailController: emailController,
+                      passwordController: passwordController,
+                    ),
                     SizedBox(height: 30),
                     CustomButton(
                       text: 'Войти',
-                      onPressed: _login,
+                      onPressed: _isLoading ? () {} : _login,
                       colorBackground: ScreenColor.color6,
                     ),
                     SizedBox(height: 20),

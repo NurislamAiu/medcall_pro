@@ -7,7 +7,7 @@ class ProfileGeneralInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(25),
-      margin: const EdgeInsets.all(10),
+      margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),

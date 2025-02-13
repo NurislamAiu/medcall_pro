@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:medcall_pro/widgets/custom_banner.dart';
-import '../../../utils/color_screen.dart';
+import '../../../../utils/color_screen.dart';
 import 'detail_bonus_screen.dart';
 import 'model/mock_bonus.dart';
 
@@ -13,6 +13,7 @@ class AllBonusesScreen extends StatelessWidget {
     final bonuses = mockBonuses;
 
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Column(
         children: [
           CustomBannerOur(
@@ -22,16 +23,20 @@ class AllBonusesScreen extends StatelessWidget {
           Expanded(
             child: ListView.builder(
               itemCount: bonuses.length,
+              padding: EdgeInsets.zero,
               itemBuilder: (context, index) {
                 final bonus = bonuses[index];
                 return Container(
                   decoration: BoxDecoration(
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(15),
-                    gradient: const LinearGradient(
-                      colors: [ScreenColor.background, Colors.white70],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.shade300,
+                        offset: const Offset(0, 3),
+                        blurRadius: 5,
+                      ),
+                    ],
                   ),
                   margin: EdgeInsets.all(10),
                   padding: EdgeInsets.all(10),

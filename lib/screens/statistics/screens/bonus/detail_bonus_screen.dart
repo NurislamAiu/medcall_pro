@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:medcall_pro/screens/statistics/screens/widgets/bonus_card_widget.dart';
+import 'package:medcall_pro/screens/statistics/screens/bonus/widgets/bonus_card_widget.dart';
 import 'model/bonus_model.dart';
 
 /// Детальный экран — показывает конкретный бонус

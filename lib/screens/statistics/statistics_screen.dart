@@ -39,7 +39,9 @@ class StatisticsScreen extends StatelessWidget {
                         ],
                       ),
                       icon: Icons.arrow_forward_ios_outlined,
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.pushNamed(context, '/reviews');
+                      },
                     ),
                     const SizedBox(height: 16),
                     _buildNeumorphicCard(
@@ -53,7 +55,9 @@ class StatisticsScreen extends StatelessWidget {
                         ),
                       ),
                       icon: Icons.arrow_forward_ios_outlined,
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.pushNamed(context, '/tracker');
+                      },
                     ),
                     const SizedBox(height: 16),
                     _buildNeumorphicCard(

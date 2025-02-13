@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:medcall_pro/screens/profile/wigdets/profile_banner_widget.dart';
 import 'package:medcall_pro/screens/profile/wigdets/profile_general_info_widget.dart';
@@ -38,6 +39,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
       _isLoading = false;
     });
   }
+  Future<void> _logout() async {
+    try {
+      await FirebaseAuth.instance.signOut(); // Выход из Firebase
+      Navigator.pushReplacementNamed(context, '/login'); // Перенаправление на экран входа
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Ошибка выхода: $e')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +63,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ProfileBanner(data: _cachedUserData),
           ProfileGeneralInfo(),
           ProfileMoreInfo(data: _cachedUserData),
+          ElevatedButton(onPressed: _logout, child: Text('Exit'))
         ],
       ),
     );

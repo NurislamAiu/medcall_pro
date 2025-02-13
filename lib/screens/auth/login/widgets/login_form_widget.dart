@@ -4,69 +4,55 @@ import '../../../../utils/color_screen.dart';
 import '../../../../widgets/custom_text_filed.dart';
 
 class LoginForm extends StatefulWidget {
-  const LoginForm({Key? key}) : super(key: key);
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+
+  const LoginForm({
+    Key? key,
+    required this.emailController,
+    required this.passwordController,
+  }) : super(key: key);
 
   @override
   State<LoginForm> createState() => _LoginFormState();
 }
 
 class _LoginFormState extends State<LoginForm> {
-  late final TextEditingController emailController;
-  late final TextEditingController passwordController;
-
-  @override
-  void initState() {
-    super.initState();
-    emailController = TextEditingController();
-    passwordController = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
-    super.dispose();
-  }
-
-  String? _emailValidator(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Введите адрес электронной почты';
-    }
-    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
-    if (!emailRegex.hasMatch(value)) {
-      return 'Некорректный формат почты';
-    }
-    return null;
-  }
-
-  String? _passwordValidator(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Введите пароль';
-    }
-    if (value.length < 6) {
-      return 'Пароль должен быть не менее 6 символов';
-    }
-    return null;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CustomTextField(
-          controller: emailController,
+          controller: widget.emailController, // Используем переданный контроллер
           label: 'Почта',
           icon: Iconsax.sms,
-          validator: _emailValidator,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Введите адрес электронной почты';
+            }
+            final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+            if (!emailRegex.hasMatch(value)) {
+              return 'Некорректный формат почты';
+            }
+            return null;
+          },
         ),
         const SizedBox(height: 20),
         CustomTextField(
-          controller: passwordController,
+          controller: widget.passwordController, // Используем переданный контроллер
           label: 'Пароль',
           icon: Iconsax.lock,
           obscureText: true,
-          validator: _passwordValidator,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Введите пароль';
+            }
+            if (value.length < 6) {
+              return 'Пароль должен быть не менее 6 символов';
+            }
+            return null;
+          },
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
