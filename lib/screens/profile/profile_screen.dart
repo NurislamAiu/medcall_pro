@@ -49,17 +49,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  Future<void> _logout() async {
-    try {
-      await FirebaseAuth.instance.signOut();
-      Navigator.pushReplacementNamed(context, '/login');
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ошибка выхода: $e')),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,7 +62,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ProfileBanner(data: _userData),
           ProfileGeneralInfo(data: _userData),
           ProfileMoreInfo(data: _userData),
-          ElevatedButton(onPressed: _logout, child: Text('Exit'))
         ],
       ),
     );
